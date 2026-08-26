@@ -1,0 +1,19 @@
+# 编译产物
+*.exe
+*.o
+*.obj
+*.out
+
+# 各版本编译出的可执行文件（Windows / Linux）
+src/hopfield_basic
+src/hopfield_6x6
+src/hopfield_dynamic_grid
+src/hopfield_measurement
+src/hopfield_oversampling
+src/hopfield_annealing
+
+# 编辑器 / 系统文件
+.vscode/
+.idea/
+*.swp
+.DS_Store
