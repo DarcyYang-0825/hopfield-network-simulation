@@ -24,8 +24,15 @@ Hopfield-Network-C/
 │   ├── hopfield_measurement.c  动态网格数据测量
 │   ├── hopfield_oversampling.c 过采样标准化 + 热力图 / CSV 输出
 │   └── hopfield_annealing.c    模拟退火
-└── docs/
-    └── 代码.docx               原始说明文档
+├── docs/
+│   └── 代码.docx               原始说明文档
+└── visualization/              Python 可视化（动画演示 + 生成脚本）
+    ├── hopfield_visualize.py   一键生成全部动画/图片的自包含脚本
+    ├── gif1_pattern_recovery.gif   图案恢复过程
+    ├── gif2_energy_descent.gif     能量函数单调下降
+    ├── gif3_annealing_recovery.gif 模拟退火恢复
+    ├── gif4_energy_landscape.gif   3D 能量景观动画
+    └── fig_energy_landscape.png    静态 3D 能量景观图
 ```
 
 ## 文件说明
@@ -87,6 +94,43 @@ $ ./hopfield_basic
 ## 输入噪声水平
 
 默认加噪率 `NOISE_RATE = 0.3`（30% 的像素被翻转）。可通过修改源文件顶部的 `#define NOISE_RATE` 调整，观察不同噪声下网络的恢复能力。
+
+## 可视化
+
+仓库附带与 C 实现配套的 Python 可视化脚本 `visualization/hopfield_visualize.py`，算法细节与 `src/hopfield_basic.c`、`src/hopfield_annealing.c` 精确一致（异步更新边界、收敛判据、退火降温流程均逐条对应），可一键复现下列全部动画。
+
+**依赖**：Python 3 + `numpy`、`matplotlib`、`Pillow`（`scipy` 可选，安装后 3D 曲面更细腻）：
+
+```bash
+pip install numpy matplotlib pillow
+```
+
+**运行**（在 `visualization/` 目录下）：
+
+```bash
+python hopfield_visualize.py          # 生成全部 4 个 GIF + 1 张静态图，约 5~10 分钟
+python hopfield_visualize.py --quick  # 仅生成前两个基础 GIF，约 1 分钟
+```
+
+结果输出到 `visualization/output/`。案例与实验报告一致：存储 A / D / S 三个字母，测试 A，加 30% 噪声。
+
+### 效果预览
+
+**① 图案恢复过程**——带 30% 噪声的输入经异步更新逐步收敛为记忆图案：
+
+![图案恢复过程](visualization/gif1_pattern_recovery.gif)
+
+**② 能量函数单调下降**——每次神经元更新都使能量下降，收敛到能量局部极小点：
+
+![能量下降曲线](visualization/gif2_energy_descent.gif)
+
+**③ 模拟退火**——标准更新陷入非字母伪态后，退火允许能量暂时升高以跳出局部极小，最终恢复目标字母：
+
+![模拟退火恢复](visualization/gif3_annealing_recovery.gif)
+
+**④ 3D 能量景观**——记忆存储为能量谷，状态沿下降方向滚入最近的谷（曲面为连续近似示意，谷底位置与严格离散计算一致）：
+
+![3D 能量景观动画](visualization/gif4_energy_landscape.gif)
 
 ## 许可证
 
